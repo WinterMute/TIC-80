@@ -1,4 +1,4 @@
-name: Build Pro
+name: Build
 
 on: [push, pull_request]
 
@@ -45,6 +45,28 @@ jobs:
           cmake -G "Visual Studio 16 2019" -A Win32 -T v141_xp -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
           cmake --build . --config MinSizeRel --parallel
 
+  # === Windows XP PRO ===
+  winxp-pro:
+    runs-on: windows-2019
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+
+      - name: Build
+        shell: cmd
+        run: |
+          COPY /Y build\janet\janetconf.h vendor\janet\src\conf\janetconf.h
+          cd build
+          cmake -G "Visual Studio 16 2019" -A Win32 -T v141_xp -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On ..
+          cmake --build . --config MinSizeRel --parallel
+
   # === Windows ===
   windows:
     runs-on: windows-2019
@@ -79,6 +101,27 @@ jobs:
         run: |
           cd build
           cmake -G "Visual Studio 16 2019" -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
+          cmake --build . --config MinSizeRel --parallel
+
+  # === Windows PRO ===
+  windows-pro:
+    runs-on: windows-2019
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+
+      - name: Build
+        shell: cmd
+        run: |
+          cd build
+          cmake -G "Visual Studio 16 2019" -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On ..
           cmake --build . --config MinSizeRel --parallel
 
   # === Windows MinGW-64 ===
@@ -154,6 +197,32 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
           cmake --build . --config MinSizeRel --parallel
 
+  # === Ubuntu PRO ===
+  linux-pro:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+
+      - name: Install
+        run: |
+          sudo apt-get update
+          sudo apt-get install libglu1-mesa-dev libasound2-dev libpulse-dev libaudio-dev libsamplerate0-dev libcurl4-openssl-dev -y
+      - name: Build
+        run: |
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On ..
+          cmake --build . --config MinSizeRel --parallel
+          cpack
+
+
   # === Raspberry PI ===
   rpi:
     runs-on: ubuntu-latest
@@ -189,6 +258,28 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake ..
           cmake --build . --config MinSizeRel --parallel
+
+  # === Raspberry PI PRO ===
+  rpi-pro:
+    runs-on: ubuntu-latest
+    container: nesbox/rpi-tic80:latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install Host toolchain
+        run: |
+          apt-get update
+          apt-get install --assume-yes build-essential ruby-full gcc-8-arm-linux-gnueabihf g++-8-arm-linux-gnueabihf
+      - name: Build
+        run: |
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake ..
+          cmake --build . --config MinSizeRel --parallel
+          cpack
 
   # === Raspberry PI 1-4 Bare Metal ===
   rpi-baremetal:
@@ -374,6 +465,27 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
           cmake --build . --config MinSizeRel --parallel
 
+  # === MacOS 12 PRO ===
+  macos-pro:
+    runs-on: macos-12
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install
+        run: brew uninstall --ignore-dependencies libidn2
+
+      - name: Build
+        run: |
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On ..
+          cmake --build . --config MinSizeRel --parallel
+          cpack
+          cp *.dmg tic80.dmg
+
   # === MacOS 14 / arm64 ===
   macos-arm64:
     runs-on: macos-14
@@ -406,6 +518,27 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
           cmake --build . --config MinSizeRel --parallel
+
+  # === MacOS 14 / arm64 PRO ===
+  macos-arm64-pro:
+    runs-on: macos-14
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install
+        run: brew uninstall --ignore-dependencies libidn2
+
+      - name: Build
+        run: |
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On ..
+          cmake --build . --config MinSizeRel --parallel
+          cpack
+          cp *.dmg tic80.dmg
 
   # === Android ===
   android:
