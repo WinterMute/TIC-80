@@ -64,7 +64,7 @@ jobs:
         run: |
           COPY /Y build\janet\janetconf.h vendor\janet\src\conf\janetconf.h
           cd build
-          cmake -G "Visual Studio 16 2019" -A Win32 -T v141_xp -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On ..
+          cmake -G "Visual Studio 16 2019" -A Win32 -T v141_xp -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
           cmake --build . --config MinSizeRel --parallel
 
       - name: Deploy
@@ -72,7 +72,7 @@ jobs:
         with:
           name: "tic80-winxp-pro"
           path: |
-            build/bin/tic80pro.exe
+            build/bin/tic80.exe
             build/bin/*.dll
 
   # === Windows ===
@@ -129,7 +129,7 @@ jobs:
         shell: cmd
         run: |
           cd build
-          cmake -G "Visual Studio 16 2019" -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On ..
+          cmake -G "Visual Studio 16 2019" -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
           cmake --build . --config MinSizeRel --parallel
 
       - name: Deploy
@@ -137,7 +137,7 @@ jobs:
         with:
           name: "tic80-windows-pro"
           path: |
-            build/bin/tic80pro.exe
+            build/bin/tic80.exe
             build/bin/*.dll
 
   # === Windows MinGW-64 ===
@@ -234,7 +234,7 @@ jobs:
       - name: Build
         run: |
           cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On ..
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
           cmake --build . --config MinSizeRel --parallel
           cpack
 
@@ -243,7 +243,7 @@ jobs:
         with:
           name: "tic80-linux-pro"
           path: |
-            build/bin/tic80pro
+            build/bin/tic80
             build/bin/*.so
 
 
@@ -301,7 +301,7 @@ jobs:
       - name: Build
         run: |
           cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake ..
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DBUILD_WITH_ALL=ON -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake ..
           cmake --build . --config MinSizeRel --parallel
           cpack
 
@@ -310,7 +310,7 @@ jobs:
         with:
           name: "tic80-rpi-pro"
           path: |
-            build/bin/tic80pro
+            build/bin/tic80
             build/bin/*.so
 
   # === Raspberry PI 1-4 Bare Metal ===
@@ -513,7 +513,7 @@ jobs:
       - name: Build
         run: |
           cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On ..
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
           cmake --build . --config MinSizeRel --parallel
           cpack
           cp *.dmg tic80.dmg
@@ -523,7 +523,7 @@ jobs:
         with:
           name: "tic80-macos-pro"
           path: |
-            build/bin/tic80pro
+            build/bin/tic80
             build/bin/*.dylib
 
   # === MacOS 14 / arm64 ===
@@ -575,7 +575,7 @@ jobs:
       - name: Build
         run: |
           cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On ..
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
           cmake --build . --config MinSizeRel --parallel
           cpack
           cp *.dmg tic80.dmg
@@ -585,7 +585,7 @@ jobs:
         with:
           name: "tic80-macos-arm64-pro"
           path: |
-            build/bin/tic80pro
+            build/bin/tic80
             build/bin/*.dylib
 
   # === Android ===
