@@ -50,7 +50,7 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -66,6 +66,14 @@ jobs:
           cd build
           cmake -G "Visual Studio 16 2019" -A Win32 -T v141_xp -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On ..
           cmake --build . --config MinSizeRel --parallel
+
+      - name: Deploy
+        uses: actions/upload-artifact@v4
+        with:
+          name: "tic80-winxp-pro"
+          path: |
+            build/bin/tic80pro.exe
+            build/bin/*.dll
 
   # === Windows ===
   windows:
@@ -123,6 +131,14 @@ jobs:
           cd build
           cmake -G "Visual Studio 16 2019" -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On ..
           cmake --build . --config MinSizeRel --parallel
+
+      - name: Deploy
+        uses: actions/upload-artifact@v4
+        with:
+          name: "tic80-windows-pro"
+          path: |
+            build/bin/tic80pro.exe
+            build/bin/*.dll
 
   # === Windows MinGW-64 ===
   windows-mingw:
@@ -202,7 +218,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -221,6 +237,14 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On ..
           cmake --build . --config MinSizeRel --parallel
           cpack
+
+      - name: Deploy
+        uses: actions/upload-artifact@v4
+        with:
+          name: "tic80-linux-pro"
+          path: |
+            build/bin/tic80pro
+            build/bin/*.so
 
 
   # === Raspberry PI ===
@@ -280,6 +304,14 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake ..
           cmake --build . --config MinSizeRel --parallel
           cpack
+
+      - name: Deploy
+        uses: actions/upload-artifact@v3
+        with:
+          name: "tic80-rpi-pro"
+          path: |
+            build/bin/tic80pro
+            build/bin/*.so
 
   # === Raspberry PI 1-4 Bare Metal ===
   rpi-baremetal:
@@ -486,6 +518,14 @@ jobs:
           cpack
           cp *.dmg tic80.dmg
 
+      - name: Deploy
+        uses: actions/upload-artifact@v4
+        with:
+          name: "tic80-macos-pro"
+          path: |
+            build/bin/tic80pro
+            build/bin/*.dylib
+
   # === MacOS 14 / arm64 ===
   macos-arm64:
     runs-on: macos-14
@@ -539,6 +579,14 @@ jobs:
           cmake --build . --config MinSizeRel --parallel
           cpack
           cp *.dmg tic80.dmg
+
+      - name: Deploy
+        uses: actions/upload-artifact@v4
+        with:
+          name: "tic80-macos-arm64-pro"
+          path: |
+            build/bin/tic80pro
+            build/bin/*.dylib
 
   # === Android ===
   android:
