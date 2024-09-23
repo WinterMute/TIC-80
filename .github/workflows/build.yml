@@ -8,7 +8,7 @@ env:
 
 jobs:
   # === Windows XP PRO ===
-  winxp:
+  winxp-pro:
     runs-on: windows-2019
 
     steps:
@@ -32,13 +32,13 @@ jobs:
       - name: Deploy
         uses: actions/upload-artifact@v4
         with:
-          name: "tic80-winxp"
+          name: "tic80-winxp-pro"
           path: |
             build/bin/tic80.exe
             build/bin/*.dll
 
   # === Windows PRO ===
-  windows:
+  windows-pro:
     runs-on: windows-2019
 
     steps:
@@ -61,7 +61,7 @@ jobs:
       - name: Deploy
         uses: actions/upload-artifact@v4
         with:
-          name: "tic80-windows"
+          name: "tic80-windows-pro"
           path: |
             build/bin/tic80.exe
             build/bin/*.dll
