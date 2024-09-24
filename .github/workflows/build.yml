@@ -139,7 +139,7 @@ jobs:
 
   # === Raspberry PI PRO ===
   rpi-pro:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container: nesbox/rpi-tic80:latest
 
     steps:
@@ -179,7 +179,7 @@ jobs:
 
   # === Raspberry PI 1-4 Bare Metal PRO ===
   rpi-baremetal-pro:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container: nesbox/baremetalpi-tic80:latest
 
     steps:
@@ -239,7 +239,7 @@ jobs:
 
   # === Raspberry PI 4 Bare Metal PRO ===
   rpi4-baremetal-pro:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container: nesbox/baremetalpi-tic80:latest
 
     steps:
@@ -302,7 +302,7 @@ jobs:
 
   # === Nintendo 3DS build PRO ===
   nintendo-3ds-pro:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container: nesbox/devkitpro-tic80:latest
 
     steps:
