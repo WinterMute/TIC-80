@@ -42,7 +42,7 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -143,7 +143,7 @@ jobs:
 
   # === Raspberry PI PRO ===
   rpi-pro:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: nesbox/rpi-tic80:latest
 
     steps:
@@ -173,7 +173,7 @@ jobs:
 
   # === Raspberry PI 1-4 Bare Metal PRO ===
   rpi-baremetal-pro:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: nesbox/baremetalpi-tic80:latest
 
     steps:
@@ -233,7 +233,7 @@ jobs:
 
   # === Raspberry PI 4 Bare Metal PRO ===
   rpi4-baremetal-pro:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: nesbox/baremetalpi-tic80:latest
 
     steps:
@@ -296,7 +296,7 @@ jobs:
 
   # === Nintendo 3DS build PRO ===
   nintendo-3ds-pro:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: nesbox/devkitpro-tic80:latest
 
     steps:
