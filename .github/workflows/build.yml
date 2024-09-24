@@ -2,6 +2,10 @@ name: Build
 
 on: [push, pull_request]
 
+# as recommended by: https://github.com/actions/checkout/issues/1590
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+
 jobs:
   # === Windows XP PRO ===
   winxp-pro:
@@ -139,21 +143,11 @@ jobs:
 
   # === Raspberry PI PRO ===
   rpi-pro:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     container: nesbox/rpi-tic80:latest
 
     steps:
-      - name: Setup environment
-        # Ubuntu 20.04 has a GLib version too old for nodejs20 or later,
-        # so, in order to do the tests, we must allow to use an older version.
-        # https://github.com/actions/checkout/issues/1590
-        # In that thread, Flamefire proposed this same solution:
-        # https://github.com/boostorg/nowide/commit/d4aa719f21149de8960247403435e9b794a01255
-        if: startsWith(matrix.image, 'ubuntu:18.04')
-        run: |
-          echo "GHA_USE_NODE_20=false" >> $GITHUB_ENV
-          echo "ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true" >> $GITHUB_ENV
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
           fetch-depth: 0
@@ -170,7 +164,7 @@ jobs:
           cpack
 
       - name: Deploy
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: "tic80-rpi-pro"
           path: |
@@ -179,11 +173,11 @@ jobs:
 
   # === Raspberry PI 1-4 Bare Metal PRO ===
   rpi-baremetal-pro:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     container: nesbox/baremetalpi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
           fetch-depth: 0
@@ -226,7 +220,7 @@ jobs:
           cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
 
       - name: Deploy
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: "tic80-rpi-baremetal"
           path: |
@@ -239,11 +233,11 @@ jobs:
 
   # === Raspberry PI 4 Bare Metal PRO ===
   rpi4-baremetal-pro:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     container: nesbox/baremetalpi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
           fetch-depth: 0
@@ -286,7 +280,7 @@ jobs:
           cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
 
       - name: Deploy
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: "tic80-rpi4-baremetal"
           path: |
@@ -302,11 +296,11 @@ jobs:
 
   # === Nintendo 3DS build PRO ===
   nintendo-3ds-pro:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     container: nesbox/devkitpro-tic80:latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
           fetch-depth: 0
@@ -323,7 +317,7 @@ jobs:
           make -j$(nproc)
 
       - name: Deploy
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: "tic80-nintendo-3ds"
           path: build/bin/tic80.3dsx
