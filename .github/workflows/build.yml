@@ -66,8 +66,8 @@ jobs:
             build/bin/tic80.exe
             build/bin/*.dll
 
-  # === Windows MinGW-64 ===
-  windows-mingw:
+  # === Windows MinGW-64 PRO===
+  windows-mingw-pro:
     runs-on: windows-latest
     defaults:
       run:
@@ -97,8 +97,16 @@ jobs:
         shell: bash
         run: |
           cd build
-          cmake -G "MSYS Makefiles" -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_ALL=ON -DBUILD_WITH_JANET=OFF ..
+          cmake -G "MSYS Makefiles" -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_ALL=ON -DBUILD_PRO=ON -DBUILD_WITH_JANET=OFF ..
           cmake --build . --config MinSizeRel --parallel
+
+      - name: Deploy
+        uses: actions/upload-artifact@v4
+        with:
+          name: "tic80-windows-mingw-pro"
+          path: |
+            build/bin/tic80.exe
+            build/bin/*.dll
 
   # === Ubuntu PRO ===
   linux-pro:
@@ -139,7 +147,7 @@ jobs:
     container: nesbox/rpi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -156,20 +164,20 @@ jobs:
           cpack
 
       - name: Deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "tic80-rpi-pro"
           path: |
             build/bin/tic80
             build/bin/*.so
 
-  # === Raspberry PI 1-4 Bare Metal ===
-  rpi-baremetal:
+  # === Raspberry PI 1-4 Bare Metal PRO ===
+  rpi-baremetal-pro:
     runs-on: ubuntu-latest
     container: nesbox/baremetalpi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -199,7 +207,7 @@ jobs:
         run: |
           git apply build/baremetalpi/circle.patch
           cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=baremetalpi/toolchain.cmake -DBUILD_WITH_ALL=ON ..
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=baremetalpi/toolchain.cmake -DBUILD_WITH_ALL=ON -DBUILD_PRO=On ..
           make tic80studio -j$(nproc)
           cd baremetalpi
           make -j$(nproc)
@@ -212,7 +220,7 @@ jobs:
           cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
 
       - name: Deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "tic80-rpi-baremetal"
           path: |
@@ -223,13 +231,13 @@ jobs:
             vendor/circle-stdlib/libs/circle/boot/fixup.dat
             vendor/circle-stdlib/libs/circle/boot/LICENCE.broadcom
 
-  # === Raspberry PI 4 Bare Metal ===
-  rpi4-baremetal:
+  # === Raspberry PI 4 Bare Metal PRO ===
+  rpi4-baremetal-pro:
     runs-on: ubuntu-latest
     container: nesbox/baremetalpi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -259,7 +267,7 @@ jobs:
         run: |
           git apply build/baremetalpi/circle.patch
           cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=baremetalpi/toolchain.cmake -DBUILD_WITH_ALL=ON ..
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=baremetalpi/toolchain.cmake -DBUILD_WITH_ALL=ON -DBUILD_PRO=On ..
           make tic80studio -j$(nproc)
           cd baremetalpi
           make -j$(nproc)
@@ -272,7 +280,7 @@ jobs:
           cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
 
       - name: Deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "tic80-rpi4-baremetal"
           path: |
@@ -286,13 +294,13 @@ jobs:
             vendor/circle-stdlib/libs/circle/boot/LICENCE.broadcom
             vendor/circle-stdlib/libs/circle/boot/start4.elf
 
-  # === Nintendo 3DS build ===
-  nintendo-3ds:
+  # === Nintendo 3DS build PRO ===
+  nintendo-3ds-pro:
     runs-on: ubuntu-latest
     container: nesbox/devkitpro-tic80:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -305,11 +313,11 @@ jobs:
       - name: Build
         run: |
           cd build
-          cmake -DCMAKE_TOOLCHAIN_FILE=$DEVKITPRO/3ds.cmake -DN3DS=TRUE -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_ALL=ON ..
+          cmake -DCMAKE_TOOLCHAIN_FILE=$DEVKITPRO/3ds.cmake -DN3DS=TRUE -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_ALL=ON -DBUILD_PRO=ON ..
           make -j$(nproc)
 
       - name: Deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "tic80-nintendo-3ds"
           path: build/bin/tic80.3dsx
@@ -319,7 +327,7 @@ jobs:
     runs-on: macos-12
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -348,7 +356,7 @@ jobs:
     runs-on: macos-14
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -372,8 +380,8 @@ jobs:
             build/bin/tic80
             build/bin/*.dylib
 
-  # === Android ===
-  android:
+  # === Android PRO ===
+  android-pro:
     runs-on: ubuntu-latest
 
     steps:
@@ -412,8 +420,8 @@ jobs:
           name: "tic80-android"
           path: build/android/tic80.apk
 
-  # === HTML ===
-  html:
+  # === HTML PRO ===
+  html-pro:
     runs-on: ubuntu-latest
 
     steps:
@@ -431,7 +439,7 @@ jobs:
       - name: Build lua
         run: |
           cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=ON -DTIC80_TARGET=tic80lua .. --fresh
+          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=ON -DBUILD_WITH_LUA=ON -DTIC80_TARGET=tic80lua .. --fresh
           cmake --build . --config MinSizeRel --parallel
 
       - name: Build ruby
