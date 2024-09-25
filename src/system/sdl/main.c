@@ -36,7 +36,7 @@
 #if defined(CRT_SHADER_SUPPORT)
 #include <SDL_gpu.h>
 #else
-#include <SDL/SDL.h>
+#include <SDL.h>
 #endif
 
 #if defined(__EMSCRIPTEN__)
