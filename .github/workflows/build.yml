@@ -157,7 +157,7 @@ jobs:
   # === Raspberry PI ===
   rpi:
     runs-on: ubuntu-latest
-    container: nesbox/rpi-tic80:latest
+    container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
       - uses: actions/checkout@v3
