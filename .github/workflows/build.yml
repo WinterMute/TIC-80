@@ -168,7 +168,7 @@ jobs:
       - name: Install Host toolchain
         run: |
           apt-get update
-          apt-get install --assume-yes build-essential ruby-full gcc-10-arm-linux-gnueabihf g++-10-arm-linux-gnueabihf
+          apt-get install --assume-yes build-essential ruby-full gcc-8-arm-linux-gnueabihf g++-8-arm-linux-gnueabihf
 
       - name: Build
         run: |
@@ -253,7 +253,7 @@ jobs:
   # === Raspberry PI 4 Bare Metal ===
   rpi4-baremetal:
     runs-on: ubuntu-latest
-    container: miguelhrvs/baremetalpi-tic80:latest
+    container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
       - uses: actions/checkout@v3
