@@ -156,7 +156,7 @@ jobs:
 
   # === Raspberry PI ===
   rpi:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
@@ -192,7 +192,7 @@ jobs:
 
   # === Raspberry PI 1-4 Bare Metal ===
   rpi-baremetal:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
@@ -252,7 +252,7 @@ jobs:
 
   # === Raspberry PI 4 Bare Metal ===
   rpi4-baremetal:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: nesbox/baremetalpi-tic80:latest
 
     steps:
