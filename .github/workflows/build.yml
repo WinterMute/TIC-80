@@ -193,7 +193,7 @@ jobs:
   # === Raspberry PI 1-4 Bare Metal ===
   rpi-baremetal:
     runs-on: ubuntu-latest
-    container: Miguel-hrvs/baremetalpi-tic80:latest
+    container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
       - uses: actions/checkout@v3
