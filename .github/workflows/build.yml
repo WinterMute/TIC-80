@@ -156,7 +156,7 @@ jobs:
 
   # === Raspberry PI ===
   rpi:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
@@ -168,7 +168,7 @@ jobs:
       - name: Install Host toolchain
         run: |
           apt-get update
-          apt-get install --assume-yes build-essential ruby-full gcc-9-arm-linux-gnueabihf g++-9-arm-linux-gnueabihf
+          apt-get install --assume-yes build-essential sdl2-dev ruby-full gcc-9-arm-linux-gnueabihf g++-9-arm-linux-gnueabihf
 
       - name: Build
         run: |
