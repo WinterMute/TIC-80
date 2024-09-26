@@ -23,6 +23,7 @@ CFLAGS += -I "$(NEWLIBDIR)/include" -I $(STDDEF_INCPATH) -I $(CIRCLESTDLIB)/incl
       -I $(TIC80STUDIOSRC) -I $(TIC80BUILD) -D BAREMETALPI -D_POSIX_C_SOURCE=200112L
 
 LIBS :=  \
+    $(NEWLIBDIR)/lib/libc.a \
     $(TIC80LIB)/libtic80studio.a \
     $(TIC80LIB)/libtic80core.a \
     $(TIC80LIB)/libgiflib.a \
@@ -48,7 +49,6 @@ LIBS :=  \
     $(TIC80LIB)/libpng.a \
     $(TIC80LIB)/libruby.a \
     $(MRUBYDIR)/build/target/lib/libmruby.a \
-    $(NEWLIBDIR)/lib/libc.a \
     $(NEWLIBDIR)/lib/libcirclenewlib.a \
     $(CIRCLEHOME)/addon/vc4/sound/libvchiqsound.a \
     $(CIRCLEHOME)/addon/vc4/vchiq/libvchiq.a \
