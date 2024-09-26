@@ -20,7 +20,7 @@ OBJS    = \
 include $(CIRCLEHOME)/Rules.mk
 
 CFLAGS += -I "$(NEWLIBDIR)/include" -I $(STDDEF_INCPATH) -I $(CIRCLESTDLIB)/include -I $(TIC80HOME)/include -I $(TIC80SRC) \
-      -I $(TIC80STUDIOSRC) -I $(TIC80BUILD) -D BAREMETALPI
+      -I $(TIC80STUDIOSRC) -I $(TIC80BUILD) -D BAREMETALPI -D_POSIX_C_SOURCE=200112L
 
 LIBS :=  \
     $(TIC80LIB)/libtic80studio.a \
