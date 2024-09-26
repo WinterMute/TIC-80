@@ -18,12 +18,6 @@ dbg("called chmod\n");
 	return -1;
 }
 
-int ftruncate(int fd, off_t length)
-{
-dbg("called ftruncate\n");
-	return -1;
-}
-
 int symlink(const char *target, const char *linkpath)
 {
 dbg("called symlink\n");
@@ -43,9 +37,9 @@ char *strdup (const char *s) {
 
 void* loadFile(const char *filename, u32* size)
 {
-/*
+
   // slow way to load a file since we don't have fseek
-/  char source[MAXBUFLEN];
+  char source[MAXBUFLEN];
   FILE *fp = fopen(filename, "rb");
   if (fp != NULL) {
     size_t newLen = fread(source, sizeof(char), MAXBUFLEN, fp);
@@ -65,7 +59,7 @@ void* loadFile(const char *filename, u32* size)
   {
     return NULL;
   }
-*/
+
 return NULL;
 }
 
