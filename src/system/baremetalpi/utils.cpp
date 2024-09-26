@@ -1,5 +1,6 @@
 #include "utils.h"
-
+#include <errno.h>
+#include <sys/stat.h>
 
 #define MAXBUFLEN (1024*1024)
 
