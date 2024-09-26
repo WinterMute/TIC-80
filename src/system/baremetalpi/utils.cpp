@@ -1,6 +1,4 @@
 #include "utils.h"
-#include <errno.h>
-#include <sys/stat.h>
 
 #define MAXBUFLEN (1024*1024)
 
@@ -38,7 +36,7 @@ char *strdup (const char *s) {
 
 void* loadFile(const char *filename, u32* size)
 {
-
+/*
   // slow way to load a file since we don't have fseek
   char source[MAXBUFLEN];
   FILE *fp = fopen(filename, "rb");
@@ -60,7 +58,7 @@ void* loadFile(const char *filename, u32* size)
   {
     return NULL;
   }
-
+*/
 return NULL;
 }
 
