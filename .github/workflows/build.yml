@@ -7,157 +7,10 @@ env:
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
-  # === Windows XP ===
-  winxp:
-    runs-on: windows-2019
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-
-      - name: Build
-        shell: cmd
-        run: |
-          COPY /Y build\janet\janetconf.h vendor\janet\src\conf\janetconf.h
-          cd build
-          cmake -G "Visual Studio 16 2019" -A Win32 -T v141_xp -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Deploy
-        uses: actions/upload-artifact@v4
-        with:
-          name: "tic80-winxp"
-          path: |
-            build/bin/tic80.exe
-            build/bin/*.dll
-
-      - name: Build Pro
-        shell: cmd
-        run: |
-          COPY /Y build\janet\janetconf.h vendor\janet\src\conf\janetconf.h
-          cd build
-          cmake -G "Visual Studio 16 2019" -A Win32 -T v141_xp -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
-
-  # === Windows ===
-  windows:
-    runs-on: windows-2019
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-
-      - name: Build
-        shell: cmd
-        run: |
-          cd build
-          cmake -G "Visual Studio 16 2019" -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Deploy
-        uses: actions/upload-artifact@v4
-        with:
-          name: "tic80-windows"
-          path: |
-            build/bin/tic80.exe
-            build/bin/*.dll
-
-      - name: Build Pro
-        shell: cmd
-        run: |
-          cd build
-          cmake -G "Visual Studio 16 2019" -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
-
-  # === Windows MinGW-64 ===
-  windows-mingw:
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: msys2 {0}
-
-    steps:
-      - name: Setup Mingw
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: true
-          install: >-
-            base-devel
-            git
-            gcc
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - name: Build
-        shell: bash
-        run: |
-          cd build
-          cmake -G "MSYS Makefiles" -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_ALL=ON -DBUILD_WITH_JANET=OFF ..
-          cmake --build . --config MinSizeRel --parallel
-
-  # === Ubuntu ===
-  linux:
-    runs-on: ubuntu-20.04
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-
-      - name: Install
-        run: |
-          sudo apt-get update
-          sudo apt-get install libglu1-mesa-dev libasound2-dev libpulse-dev libaudio-dev libsamplerate0-dev libcurl4-openssl-dev -y
-
-      - name: Build
-        run: |
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Deploy
-        uses: actions/upload-artifact@v4
-        with:
-          name: "tic80-linux"
-          path: |
-            build/bin/tic80
-            build/bin/*.so
-
-      - name: Build Pro
-        run: |
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
-
-  # === Raspberry PI ===
-  rpi:
+  # === Raspberry PI 1 Bare Metal ===
+  rpi4-baremetal:
     runs-on: ubuntu-latest
-    container: nesbox/rpi-tic80:latest
+    container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
       - uses: actions/checkout@v3
@@ -168,30 +21,116 @@ jobs:
       - name: Install Host toolchain
         run: |
           apt-get update
-          apt-get install --assume-yes build-essential ruby-full gcc-8-arm-linux-gnueabihf g++-8-arm-linux-gnueabihf
+          apt-get install --assume-yes build-essential ruby-full
+
+      - name: Prebuild
+        run: |
+          cd vendor
+          git clone --recursive https://github.com/smuehlst/circle-stdlib
+          cd circle-stdlib
+          git checkout db053a32c165c1b22423a47ed6cb5bddc72b51f2
+          git submodule update --recursive
+          ./configure -r 1
+          make -j$(nproc)
+          cd libs/circle/addon/vc4/sound/
+          make -j$(nproc)
+          cd ../vchiq
+          make -j$(nproc)
+          cd ../../linux
+          make -j$(nproc)
 
       - name: Build
         run: |
+          git apply build/baremetalpi/circle.patch
           cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=baremetalpi/toolchain.cmake -DBUILD_WITH_ALL=ON ..
+          make tic80studio -j$(nproc)
+          cd baremetalpi
+          make -j$(nproc)
+          cd ../../vendor/circle-stdlib/libs/circle/boot/
+          make -j$(nproc)
+
+      - name: Pack
+        run: |
+          cp build/baremetalpi/kernel.img vendor/circle-stdlib/libs/circle/boot/kernel.img
+          cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
 
       - name: Deploy
         uses: actions/upload-artifact@v3
         with:
-          name: "tic80-rpi"
+          name: "tic80-rpi1-baremetal"
           path: |
-            build/bin/tic80
-            build/bin/*.so
+            vendor/circle-stdlib/libs/circle/boot/bootcode.bin
+            vendor/circle-stdlib/libs/circle/boot/config.txt
+            vendor/circle-stdlib/libs/circle/boot/COPYING.linux
+            vendor/circle-stdlib/libs/circle/boot/fixup4.dat
+            vendor/circle-stdlib/libs/circle/boot/kernel.img
+            vendor/circle-stdlib/libs/circle/boot/LICENCE.broadcom
+            vendor/circle-stdlib/libs/circle/boot/start4.elf
 
-      - name: Build Pro
+  # === Raspberry PI 2 Bare Metal ===
+  rpi4-baremetal:
+    runs-on: ubuntu-latest
+    container: miguelhrvs/baremetalapi-tic80:latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install Host toolchain
         run: |
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake ..
-          cmake --build . --config MinSizeRel --parallel
+          apt-get update
+          apt-get install --assume-yes build-essential ruby-full
 
-  # === Raspberry PI 1-5 Bare Metal ===
-  rpi-baremetal:
+      - name: Prebuild
+        run: |
+          cd vendor
+          git clone --recursive https://github.com/smuehlst/circle-stdlib
+          cd circle-stdlib
+          git checkout db053a32c165c1b22423a47ed6cb5bddc72b51f2
+          git submodule update --recursive
+          ./configure -r 2
+          make -j$(nproc)
+          cd libs/circle/addon/vc4/sound/
+          make -j$(nproc)
+          cd ../vchiq
+          make -j$(nproc)
+          cd ../../linux
+          make -j$(nproc)
+
+      - name: Build
+        run: |
+          git apply build/baremetalpi/circle.patch
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=baremetalpi/toolchain.cmake -DBUILD_WITH_ALL=ON ..
+          make tic80studio -j$(nproc)
+          cd baremetalpi
+          make -j$(nproc)
+          cd ../../vendor/circle-stdlib/libs/circle/boot/
+          make -j$(nproc)
+
+      - name: Pack
+        run: |
+          cp build/baremetalpi/kernel7.img vendor/circle-stdlib/libs/circle/boot/kernel.img
+          cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
+
+      - name: Deploy
+        uses: actions/upload-artifact@v3
+        with:
+          name: "tic80-rpi2-baremetal"
+          path: |
+            vendor/circle-stdlib/libs/circle/boot/bootcode.bin
+            vendor/circle-stdlib/libs/circle/boot/config.txt
+            vendor/circle-stdlib/libs/circle/boot/COPYING.linux
+            vendor/circle-stdlib/libs/circle/boot/fixup4.dat
+            vendor/circle-stdlib/libs/circle/boot/kernel.img
+            vendor/circle-stdlib/libs/circle/boot/LICENCE.broadcom
+            vendor/circle-stdlib/libs/circle/boot/start4.elf
+            
+  # === Raspberry PI 3 Zero 2 CM 3 Bare Metal ===
+  rpi3-baremetal:
     runs-on: ubuntu-latest
     container: miguelhrvs/baremetalapi-tic80:latest
 
@@ -241,15 +180,17 @@ jobs:
       - name: Deploy
         uses: actions/upload-artifact@v3
         with:
-          name: "tic80-rpi-baremetal"
+          name: "tic80-rpi3-baremetal"
           path: |
-            vendor/circle-stdlib/libs/circle/boot/config.txt
-            vendor/circle-stdlib/libs/circle/boot/kernel.img
+            vendor/circle-stdlib/libs/circle/boot/bcm2710-rpi-zero-2-w.dtb
             vendor/circle-stdlib/libs/circle/boot/bootcode.bin
-            vendor/circle-stdlib/libs/circle/boot/start.elf
-            vendor/circle-stdlib/libs/circle/boot/fixup.dat
+            vendor/circle-stdlib/libs/circle/boot/config.txt
+            vendor/circle-stdlib/libs/circle/boot/COPYING.linux
+            vendor/circle-stdlib/libs/circle/boot/fixup4.dat
+            vendor/circle-stdlib/libs/circle/boot/kernel.img
             vendor/circle-stdlib/libs/circle/boot/LICENCE.broadcom
-
+            vendor/circle-stdlib/libs/circle/boot/start4.elf
+            
   # === Raspberry PI 4-5 Bare Metal ===
   rpi4-baremetal:
     runs-on: ubuntu-latest
@@ -315,233 +256,3 @@ jobs:
             vendor/circle-stdlib/libs/circle/boot/kernel.img
             vendor/circle-stdlib/libs/circle/boot/LICENCE.broadcom
             vendor/circle-stdlib/libs/circle/boot/start4.elf
-
-  # === Nintendo 3DS build ===
-  nintendo-3ds:
-    runs-on: ubuntu-latest
-    container: nesbox/devkitpro-tic80:latest
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - name: Install Host toolchain
-        run: |
-          apt-get update
-          apt-get install --assume-yes build-essential ruby-full
-
-      - name: Build
-        run: |
-          cd build
-          cmake -DCMAKE_TOOLCHAIN_FILE=$DEVKITPRO/3ds.cmake -DN3DS=TRUE -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_ALL=ON ..
-          make -j$(nproc)
-
-      - name: Deploy
-        uses: actions/upload-artifact@v3
-        with:
-          name: "tic80-nintendo-3ds"
-          path: build/bin/tic80.3dsx
-
-  # === MacOS 12 ===
-  macos:
-    runs-on: macos-12
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - name: Install
-        run: brew uninstall --ignore-dependencies libidn2
-
-      - name: Build
-        run: |
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Deploy
-        uses: actions/upload-artifact@v4
-        with:
-          name: "tic80-macos"
-          path: |
-            build/bin/tic80
-            build/bin/*.dylib
-
-      - name: Build Pro
-        run: |
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
-
-  # === MacOS 14 / arm64 ===
-  macos-arm64:
-    runs-on: macos-14
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - name: Install
-        run: brew uninstall --ignore-dependencies libidn2
-
-      - name: Build
-        run: |
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Deploy
-        uses: actions/upload-artifact@v4
-        with:
-          name: "tic80-macos-arm64"
-          path: |
-            build/bin/tic80
-            build/bin/*.dylib
-
-      - name: Build Pro
-        run: |
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SDLGPU=On -DBUILD_PRO=On -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
-
-  # === Android ===
-  android:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r21e
-          add-to-path: false
-          local-cache: true
-
-      - name: set up JDK 11
-        uses: actions/setup-java@v4
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: gradle
-
-      - name: Build
-        run: |
-          cd build/android
-          chmod +x gradlew
-          ./gradlew assembleRelease
-          cp app/build/outputs/apk/release/app-release.apk tic80.apk
-
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-
-      - name: Deploy
-        uses: actions/upload-artifact@v4
-        with:
-          name: "tic80-android"
-          path: build/android/tic80.apk
-
-  # === HTML ===
-  html:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: mymindstorm/setup-emsdk@v14
-
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-
-      - name: Build lua
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=ON -DTIC80_TARGET=tic80lua .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Build ruby
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=OFF -DBUILD_WITH_RUBY=ON -DTIC80_TARGET=tic80ruby .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Build js
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=OFF -DBUILD_WITH_JS=ON -DTIC80_TARGET=tic80js .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Build moon
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=OFF -DBUILD_WITH_MOON=ON -DTIC80_TARGET=tic80moon .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Build fennel
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=OFF -DBUILD_WITH_FENNEL=ON -DTIC80_TARGET=tic80fennel .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Build scheme
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=OFF -DBUILD_WITH_SCHEME=ON -DTIC80_TARGET=tic80scheme .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Build squirrel
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=OFF -DBUILD_WITH_SQUIRREL=ON -DTIC80_TARGET=tic80squirrel .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Build wren
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=OFF -DBUILD_WITH_WREN=ON -DTIC80_TARGET=tic80wren .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Build wasm
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=OFF -DBUILD_WITH_WASM=ON -DTIC80_TARGET=tic80wasm .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Build janet
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=OFF -DBUILD_WITH_JANET=ON -DTIC80_TARGET=tic80janet .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Build python
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_LUA=OFF -DBUILD_WITH_PYTHON=ON -DTIC80_TARGET=tic80python .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-
-      - name: Build all
-        run: |
-          cd build
-          emcmake cmake -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_ALL=ON .. --fresh
-          cmake --build . --config MinSizeRel --parallel
-          cp html/index.html bin/index.html
-
-      - name: Deploy
-        uses: actions/upload-artifact@v4
-        with:
-          name: "tic80-html"
-          path: |
-            build/bin/*
