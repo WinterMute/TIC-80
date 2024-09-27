@@ -190,7 +190,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake ..
           cmake --build . --config MinSizeRel --parallel
 
-  # === Raspberry PI 1-4 Bare Metal ===
+  # === Raspberry PI 1-5 Bare Metal ===
   rpi-baremetal:
     runs-on: ubuntu-latest
     container: miguelhrvs/baremetalapi-tic80:latest
@@ -301,7 +301,7 @@ jobs:
       - name: Deploy
         uses: actions/upload-artifact@v3
         with:
-          name: "tic80-rpi4/5-baremetal"
+          name: "tic80-rpi4-5-baremetal"
           path: |
             vendor/circle-stdlib/libs/circle/boot/bcm2710-rpi-zero-2-w.dtb
             vendor/circle-stdlib/libs/circle/boot/bcm2711-rpi-4-b.dtb
