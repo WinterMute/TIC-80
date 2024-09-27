@@ -8,7 +8,7 @@ env:
 
 jobs:
   # === Raspberry PI 1 Bare Metal ===
-  rpi4-baremetal:
+  rpi1-baremetal:
     runs-on: ubuntu-latest
     container: miguelhrvs/baremetalapi-tic80:latest
 
@@ -69,7 +69,7 @@ jobs:
             vendor/circle-stdlib/libs/circle/boot/start4.elf
 
   # === Raspberry PI 2 Bare Metal ===
-  rpi4-baremetal:
+  rpi2-baremetal:
     runs-on: ubuntu-latest
     container: miguelhrvs/baremetalapi-tic80:latest
 
@@ -192,7 +192,7 @@ jobs:
             vendor/circle-stdlib/libs/circle/boot/start4.elf
             
   # === Raspberry PI 4-5 Bare Metal ===
-  rpi4-baremetal:
+  rpi4-5-baremetal:
     runs-on: ubuntu-latest
     container: miguelhrvs/baremetalapi-tic80:latest
 
