@@ -9,11 +9,11 @@ env:
 jobs:
   # === Raspberry PI 1 Bare Metal ===
   rpi1-baremetal:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -56,7 +56,7 @@ jobs:
           cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
 
       - name: Deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "tic80-rpi1-baremetal"
           path: |
@@ -70,11 +70,11 @@ jobs:
 
   # === Raspberry PI 2 Bare Metal ===
   rpi2-baremetal:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -117,7 +117,7 @@ jobs:
           cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
 
       - name: Deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "tic80-rpi2-baremetal"
           path: |
@@ -131,11 +131,11 @@ jobs:
             
   # === Raspberry PI 3 Zero 2 CM 3 Bare Metal ===
   rpi3-baremetal:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -178,7 +178,7 @@ jobs:
           cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
 
       - name: Deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "tic80-rpi3-baremetal"
           path: |
@@ -193,11 +193,11 @@ jobs:
             
   # === Raspberry PI 4-5 Bare Metal ===
   rpi4-5-baremetal:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -240,7 +240,7 @@ jobs:
           cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
 
       - name: Deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "tic80-rpi4-5-baremetal"
           path: |
