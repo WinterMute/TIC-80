@@ -171,13 +171,13 @@ bool tic_sys_keyboard_text(char* text)
     return false;
 }
 
-void screenCopy(CScreenDevice* screen, const u32* ts)
+void screenCopy(CScreenDevice* screen, u32* ts)
 {
     u32 pitch = screen->GetPitch();
     u32* buf = screen->GetBuffer();
     for (int y = 0; y < TIC80_HEIGHT; y++)
     {
-        const u32 *line = ts + ((y+TIC80_OFFSET_TOP)*(TIC80_FULLWIDTH) + TIC80_OFFSET_LEFT);
+        u32 *line = ts + ((y+TIC80_OFFSET_TOP)*(TIC80_FULLWIDTH) + TIC80_OFFSET_LEFT);
         memcpy(buf + (pitch * y), line, TIC80_WIDTH * 4);
     }
 
