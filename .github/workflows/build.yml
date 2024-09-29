@@ -2,10 +2,6 @@ name: Build
 
 on: [push, pull_request]
 
-# as recommended by: https://github.com/actions/checkout/issues/1590
-env:
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-
 jobs:
   # === Windows XP ===
   winxp:
@@ -190,13 +186,13 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake ..
           cmake --build . --config MinSizeRel --parallel
 
-  # === Raspberry PI 1-5 Bare Metal ===
+  # === Raspberry PI 1-3 Bare Metal ===
   rpi-baremetal:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -239,10 +235,11 @@ jobs:
           cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
 
       - name: Deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "tic80-rpi-baremetal"
           path: |
+            vendor/circle-stdlib/libs/circle/boot/bcm2710-rpi-zero-2-w.dtb
             vendor/circle-stdlib/libs/circle/boot/config.txt
             vendor/circle-stdlib/libs/circle/boot/kernel.img
             vendor/circle-stdlib/libs/circle/boot/bootcode.bin
@@ -252,11 +249,11 @@ jobs:
 
   # === Raspberry PI 4-5 Bare Metal ===
   rpi4-baremetal:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: miguelhrvs/baremetalapi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -299,7 +296,7 @@ jobs:
           cp build/baremetalpi/boot/config.txt vendor/circle-stdlib/libs/circle/boot/config.txt
 
       - name: Deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "tic80-rpi4-5-baremetal"
           path: |
