@@ -184,7 +184,7 @@ u32 rgbaToBgra(u32 u){
 void screenCopy(CScreenDevice* screen, u32* ts)
 {
 	tic_mem* tic = platform.studio->tic;
-	tic80_input* input = &tic->ram.input;
+	tic80_input* input = &tic->ram->input;
 
  u32 pitch = screen->GetPitch();
  u32* buf = screen->GetBuffer();
