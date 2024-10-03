@@ -1050,7 +1050,7 @@ static mrb_bool catcherr(tic_core* core)
     if (mrb->exc)
     {
         mrb_value ex = mrb_obj_value(mrb->exc);
-        mrb_value bt = mrb_print_backtrace(mrb, ex);
+        mrb_value bt = mrb_print_backtrace(mrb);
         if (!mrb_array_p(bt))
             bt = mrb_print_backtrace(mrb);
         mrb_value insp = mrb_inspect(mrb, ex);
