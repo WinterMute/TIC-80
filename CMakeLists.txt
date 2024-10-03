@@ -66,8 +66,6 @@ message("BUILD_WITH_ALL: ${BUILD_WITH_ALL}")
 
 if (N3DS)
     set(BUILD_SDL OFF)
-    set(CMAKE_C_FLAGS "{CMAKE_C_FLAGS} -Wno-error")
-    set(CMAKE_CXX_FLAGS "{CMAKE_CXX_FLAGS} -Wno-error")
 endif()
 
 if (BAREMETALPI)
