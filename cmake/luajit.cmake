@@ -6,7 +6,7 @@ option(BUILD_WITH_LUA "Lua Enabled" ON)
 message("BUILD_WITH_LUA: ${BUILD_WITH_LUA}")
 
 if(BUILD_WITH_LUA OR BUILD_WITH_MOON OR BUILD_WITH_FENNEL)
-    set(LUA_DIR ${THIRDPARTY_DIR}/lua)
+    set(LUA_DIR ${THIRDPARTY_DIR}/luaJIT)
     set(LUA_SRC
         ${LUA_DIR}/lj_api.c
         ${LUA_DIR}/luajit.c
