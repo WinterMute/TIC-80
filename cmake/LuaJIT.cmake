@@ -13,7 +13,7 @@ if(BUILD_WITH_LUA OR BUILD_WITH_MOON OR BUILD_WITH_FENNEL)
         ${LUAJIT_DIR}/src/lj_mcode.c
         ${LUAJIT_DIR}/src/lj_ctype.c
         ${LUAJIT_DIR}/src/lj_debug.c
-        ${LUAJIT_DIR}/src/lj_bcdump.c
+        ${LUAJIT_DIR}/src/lj_bc.c
         ${LUAJIT_DIR}/src/lj_func.c
         ${LUAJIT_DIR}/src/lj_gc.c
         ${LUAJIT_DIR}/src/lj_lex.c
