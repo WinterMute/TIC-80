@@ -14,9 +14,9 @@
 	path = vendor/lpeg
 	url = https://github.com/nesbox/lpeg.git
 	shallow = true
-[submodule "vendor/lua"]
-	path = vendor/lua
-	url = https://github.com/lua/lua.git
+[submodule "vendor/luajit"]
+	path = vendor/luajit
+	url = https://github.com/LuaJIT/LuaJIT.git
 	shallow = true
 [submodule "vendor/squirrel"]
 	path = vendor/squirrel
