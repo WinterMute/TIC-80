@@ -90,3 +90,9 @@
 	path = vendor/sdl-gpu
 	url = https://github.com/aliceisjustplaying/sdl-gpu.git
 	branch = master
+[submodule "LuaJIT"]
+	path = LuaJIT
+	url = https://github.com/LuaJIT/LuaJIT.git
+[submodule "vendor/LuaJIT"]
+	path = vendor/LuaJIT
+	url = https://github.com/LuaJIT/LuaJIT.git
