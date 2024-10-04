@@ -29,7 +29,6 @@ if(BUILD_WITH_LUA OR BUILD_WITH_MOON OR BUILD_WITH_FENNEL)
         ${LUAJIT_DIR}/src/lib_aux.c
         ${LUAJIT_DIR}/src/lib_base.c
         ${LUAJIT_DIR}/src/lj_opt_narrow.c
-        ${LUAJIT_DIR}/src/lj_gdblib.c
         ${LUAJIT_DIR}/src/lj_gdbjit.c
         ${LUAJIT_DIR}/src/lj_debug.c
         ${LUAJIT_DIR}/src/lib_debug.c
