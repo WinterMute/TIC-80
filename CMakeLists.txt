@@ -141,7 +141,7 @@ include(cmake/zlib.cmake)
 include(cmake/zip.cmake)
 include(cmake/tools.cmake)
 
-include(cmake/lua.cmake)
+include(cmake/luajit.cmake)
 include(cmake/moon.cmake)
 include(cmake/fennel.cmake)
 include(cmake/wren.cmake)
