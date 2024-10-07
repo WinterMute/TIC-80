@@ -168,7 +168,7 @@ jobs:
       - name: Install Host toolchain
         run: |
           apt-get update
-          apt-get install --assume-yes build-essential ruby-full gcc-14-arm-linux-gnueabihf g++-14-arm-linux-gnueabihf
+          apt-get install --assume-yes build-essential ruby-full gcc-14-arm-linux-gnueabihf g++-14-arm-linux-gnueabihf libsdl2-dev
 
       - name: Build
         run: |
