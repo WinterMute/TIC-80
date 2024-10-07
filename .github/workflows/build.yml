@@ -157,10 +157,10 @@ jobs:
   # === Raspberry PI ===
   rpi:
     runs-on: ubuntu-latest
-    container: nesbox/rpi-tic80:latest
+    container: miguelhrvs/rpi-tic80:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -168,7 +168,7 @@ jobs:
       - name: Install Host toolchain
         run: |
           apt-get update
-          apt-get install --assume-yes build-essential ruby-full gcc-8-arm-linux-gnueabihf g++-8-arm-linux-gnueabihf
+          apt-get install --assume-yes build-essential ruby-full gcc-14-arm-linux-gnueabihf g++-14-arm-linux-gnueabihf
 
       - name: Build
         run: |
@@ -177,7 +177,7 @@ jobs:
           cmake --build . --config MinSizeRel --parallel
 
       - name: Deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "tic80-rpi"
           path: |
