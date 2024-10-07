@@ -173,7 +173,7 @@ jobs:
       - name: Build
         run: |
           cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake -DBUILD_WITH_ALL=ON -DBUILD_WITH_SQUIRREL=OFF ..
+          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake -DBUILD_WITH_ALL=ON -DBUILD_WITH_SQUIRREL=OFF -DBUILD_WITH_PYTHON=OFF ..
           cmake --build . --config MinSizeRel --parallel
 
       - name: Deploy
