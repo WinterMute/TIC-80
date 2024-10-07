@@ -1051,12 +1051,12 @@ static mrb_bool catcherr(tic_core* core)
     {
         mrb_value ex = mrb_obj_value(mrb->exc);
 
-        mrb_print_backtrace(mrb, mrb->exc);
+        mrb_print_backtrace(mrb);
         mrb_value insp = mrb_inspect(mrb, ex);
 
         char* cmsg = mrb_str_to_cstr(mrb, insp);
         core->data->error(core->data->data, cmsg);
-        
+
         mrb->exc = NULL;
 
         return false;
