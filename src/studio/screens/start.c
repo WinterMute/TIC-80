@@ -141,9 +141,6 @@ void initStart(Start* start, Studio* studio, const char* cart)
         }
     };
 
-    start->text = calloc(1, STUDIO_TEXT_BUFFER_SIZE);
-    start->color = calloc(1, STUDIO_TEXT_BUFFER_SIZE);
-
     static const char* Header[] =
     {
         "",
@@ -229,7 +226,5 @@ void initStart(Start* start, Studio* studio, const char* cart)
 
 void freeStart(Start* start)
 {
-    free(start->text);
-    free(start->color);
     free(start);
 }
