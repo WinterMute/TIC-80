@@ -141,6 +141,9 @@ void initStart(Start* start, Studio* studio, const char* cart)
         }
     };
 
+    start->text = calloc(1, STUDIO_TEXT_BUFFER_SIZE);
+    start->color = calloc(1, STUDIO_TEXT_BUFFER_SIZE);
+
     static const char* Header[] =
     {
         "",
@@ -150,7 +153,7 @@ void initStart(Start* start, Studio* studio, const char* cart)
     };
 
     for(s32 i = 0; i < COUNT_OF(Header); i++)
-        strcpy(&start->text[i * STUDIO_TEXT_BUFFER_WIDTH], Header[i]);
+        strcpy(start->text + i * STUDIO_TEXT_BUFFER_WIDTH, Header[i]);
 
     for(s32 i = 0; i < STUDIO_TEXT_BUFFER_SIZE; i++)
         start->color[i] = CLAMP(((i % STUDIO_TEXT_BUFFER_WIDTH) + (i / STUDIO_TEXT_BUFFER_WIDTH)) / 2,
@@ -226,5 +229,7 @@ void initStart(Start* start, Studio* studio, const char* cart)
 
 void freeStart(Start* start)
 {
+    free(start->text);
+    free(start->color);
     free(start);
 }
