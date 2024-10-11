@@ -567,8 +567,7 @@ bool tic_fs_isdir(tic_fs* fs, const char* name)
 #if defined(BAREMETALPI)
     dbg("fsIsDirSync %s\n", name);
     FILINFO s;
-    const char* path = tic_fs_path(fs, name);
-    FRESULT res = f_stat(path, &s);
+    FRESULT res = f_stat(name, &s);
     if (res != FR_OK) return false;
 
     return s.fattrib & AM_DIR;
@@ -904,8 +903,7 @@ bool tic_fs_makedir(tic_fs* fs, const char* name)
     // TODO BAREMETALPI
     dbg("makeDir %s\n", name);
 
-    const FsString* pathString = tic_fs_path(fs, name);
-    char* path = strdup(pathString);
+    char* path = strdup(name);
     if (path && *path) {                      // make sure result has at least
       if (path[strlen(path) - 1] == '/')    // one character
             path[strlen(path) - 1] = 0;
