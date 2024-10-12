@@ -27,7 +27,7 @@ jobs:
           COPY /Y build\janet\janetconf.h vendor\janet\src\conf\janetconf.h
           cd build
           cmake -G "Visual Studio 16 2019" -A Win32 -T v141_xp -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
+          cmake --build . --parallel
 
       - name: Deploy
         uses: actions/upload-artifact@v4
@@ -64,7 +64,7 @@ jobs:
         run: |
           cd build
           cmake -G "Visual Studio 16 2019" -DBUILD_SDLGPU=On -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_ALL=ON ..
-          cmake --build . --config MinSizeRel --parallel
+          cmake --build . --parallel
 
       - name: Deploy
         uses: actions/upload-artifact@v4
