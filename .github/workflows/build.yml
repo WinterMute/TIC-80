@@ -231,7 +231,7 @@ jobs:
       - name: Build Pro
         run: |
           cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_PRO=On -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake ..
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PRO=On -DCMAKE_TOOLCHAIN_FILE=rpi/toolchain.cmake ..
           cmake --build . --config MinSizeRel --parallel
 
   # === Raspberry PI 1-4 Bare Metal ===
@@ -270,7 +270,7 @@ jobs:
         run: |
           git apply build/baremetalpi/circle.patch
           cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=baremetalpi/toolchain.cmake -DBUILD_WITH_ALL=ON ..
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=baremetalpi/toolchain.cmake -DBUILD_WITH_ALL=ON ..
           make tic80studio -j$(nproc)
           cd baremetalpi
           make -j$(nproc)
@@ -330,7 +330,7 @@ jobs:
         run: |
           git apply build/baremetalpi/circle.patch
           cd build
-          cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_TOOLCHAIN_FILE=baremetalpi/toolchain.cmake -DBUILD_WITH_ALL=ON ..
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=baremetalpi/toolchain.cmake -DBUILD_WITH_ALL=ON ..
           make tic80studio -j$(nproc)
           cd baremetalpi
           make -j$(nproc)
