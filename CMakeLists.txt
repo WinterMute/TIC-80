@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.3)
-OR CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"
+
 include(cmake/version.cmake)
 
 project(TIC-80 VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION} LANGUAGES C CXX)
