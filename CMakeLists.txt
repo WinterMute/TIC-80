@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 3.3)
 
 include(cmake/version.cmake)
 
-if(N3DS||BAREMETALPI)
+if(N3DS)
+add_compile_options(-ffat-lto-objects)
+endif()
+
+if(BAREMETALPI)
 add_compile_options(-ffat-lto-objects)
 endif()
 
