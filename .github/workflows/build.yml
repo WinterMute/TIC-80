@@ -376,7 +376,7 @@ jobs:
       - name: Build
         run: |
           cd build
-          cmake -DCMAKE_TOOLCHAIN_FILE=$DEVKITPRO/3ds.cmake -DN3DS=TRUE -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_WITH_ALL=ON ..
+          cmake -DCMAKE_TOOLCHAIN_FILE=$DEVKITPRO/3ds.cmake -DN3DS=TRUE -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_ALL=ON ..
           make -j$(nproc)
 
       - name: Deploy
