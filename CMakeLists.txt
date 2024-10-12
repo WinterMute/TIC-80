@@ -2,13 +2,7 @@ cmake_minimum_required(VERSION 3.3)
 
 include(cmake/version.cmake)
 
-if(N3DS)
 add_compile_options(-ffat-lto-objects)
-endif()
-
-if(BAREMETALPI)
-add_compile_options(-ffat-lto-objects)
-endif()
 
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -flto")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto")
