@@ -2,10 +2,15 @@ cmake_minimum_required(VERSION 3.3)
 
 include(cmake/version.cmake)
 
-add_compile_options(-ffat-lto-objects)
+if(LINUX OR N3DS OR ANDROID OR BAREMETAL OR RPI)
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -flto -ffat-lto-objects")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto -ffat-lto-objects")
+endif()
 
+if(EMSCRIPTEN OR MSVC OR APPLE)
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -flto")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto")
+endif()
 
 project(TIC-80 VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION} LANGUAGES C CXX)
 
